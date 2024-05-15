@@ -11,5 +11,6 @@ public class FileDto {
     private String id;
     private String title;
     private String description;
-    private String file;
+    private int numberOfDownloads;
+    private int numberOfShares;
 }

@@ -1,8 +1,6 @@
 package com.amalitechfileserver.fileserverbackend.config;
 
-import com.amalitechfileserver.fileserverbackend.entity.JwtOfUser;
 import com.amalitechfileserver.fileserverbackend.entity.UserEntity;
-import com.amalitechfileserver.fileserverbackend.repository.JwtRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -26,7 +23,6 @@ public class JwtService {
     private String key;
 
     private final SecretKey SECRET_KEY;
-    private final JwtRepository jwtRepository;
 
     public String getUserEmail(String jwt) {
         return extractClaims(jwt, Claims::getSubject);
@@ -49,9 +45,8 @@ public class JwtService {
         String userEmail = userDetails.getUsername();
         String retrievedEmail = extractClaims(jwt, Claims::getSubject);
         Date date = extractClaims(jwt, Claims::getExpiration);
-        Optional<JwtOfUser> token = jwtRepository.findByToken(jwt);
 
-        return date.after(new Date()) && userEmail.equals(retrievedEmail) && token.isPresent();
+        return date.after(new Date()) && userEmail.equals(retrievedEmail);
     }
 
     public String generateJwt(UserEntity user) {

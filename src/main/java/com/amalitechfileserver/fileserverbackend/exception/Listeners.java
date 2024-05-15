@@ -2,7 +2,6 @@ package com.amalitechfileserver.fileserverbackend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -22,5 +21,15 @@ public class Listeners {
     @ExceptionHandler(UserNotFound.class)
     public ResponseEntity<String> userNameNotFound(UserNotFound exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(FileNotFound.class)
+    public ResponseEntity<String> fileNotFound(FileNotFound exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(InputBlank.class)
+    public ResponseEntity<String> inputBlank(InputBlank exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 }

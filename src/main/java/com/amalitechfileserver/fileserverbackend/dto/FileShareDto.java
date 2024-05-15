@@ -9,6 +9,5 @@ import lombok.Setter;
 @Builder
 public class FileShareDto {
     private String fileId;
-    private String senderEmail;
     private String receiverEmail;
 }

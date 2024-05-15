@@ -24,11 +24,14 @@ public class FileEntity {
 
     @Column(nullable = false)
     @Lob
-    private String file;
+    private byte[] file;
 
     @Column(nullable = false)
     private int numberOfDownloads = 0;
 
     @Column(nullable = false)
     private int numberOfShares = 0;
+
+    @Column(nullable = false)
+    private String fileType;
 }
