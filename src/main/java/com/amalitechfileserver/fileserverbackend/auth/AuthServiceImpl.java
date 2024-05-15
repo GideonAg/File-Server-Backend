@@ -2,15 +2,14 @@ package com.amalitechfileserver.fileserverbackend.auth;
 
 import com.amalitechfileserver.fileserverbackend.config.JwtService;
 import com.amalitechfileserver.fileserverbackend.dto.AuthDto;
-import com.amalitechfileserver.fileserverbackend.entity.JwtOfUser;
 import com.amalitechfileserver.fileserverbackend.entity.UserEntity;
 import com.amalitechfileserver.fileserverbackend.entity.UserToken;
+import com.amalitechfileserver.fileserverbackend.exception.InputBlank;
 import com.amalitechfileserver.fileserverbackend.exception.UserAlreadyRegisteredException;
-import com.amalitechfileserver.fileserverbackend.repository.JwtRepository;
+import com.amalitechfileserver.fileserverbackend.exception.UserNotFound;
 import com.amalitechfileserver.fileserverbackend.repository.UserRepository;
 import com.amalitechfileserver.fileserverbackend.repository.UserTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,11 +27,13 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationProvider authenticationProvider;
     private final JwtService jwtService;
-    private final JwtRepository jwtRepository;
     private final UserTokenRepository userTokenRepository;
 
     @Override
-    public String register(AuthDto registerDto) throws UserAlreadyRegisteredException {
+    public String register(AuthDto registerDto) throws UserAlreadyRegisteredException, InputBlank {
+        if (registerDto.getEmail().isBlank() || registerDto.getPassword().isBlank())
+            throw new InputBlank("Email or password can't be blank");
+
         Optional<UserEntity> fetchedUser = userRepository.findByEmail(registerDto.getEmail());
         if (fetchedUser.isPresent())
             throw new UserAlreadyRegisteredException("User is already registered");
@@ -40,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
         UserEntity new_user = UserEntity.builder()
                 .email(registerDto.getEmail())
                 .password(passwordEncoder.encode(registerDto.getPassword()))
-                .role(Role.ADMIN)
+                .role(Role.USER)
                 .build();
 
         UserEntity savedUser = userRepository.save(new_user);
@@ -49,14 +50,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse login(AuthDto loginDto) {
+    public AuthResponse login(AuthDto loginDto) throws InputBlank {
+        if (loginDto.getEmail().isBlank() || loginDto.getPassword().isBlank())
+            throw new InputBlank("Email or password can't be blank");
+
         authenticationProvider.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
         );
 
         UserEntity user = userRepository.findByEmail(loginDto.getEmail()).get();
         String jwt = jwtService.generateJwt(user);
-        saveUserWithJwt(user, jwt);
 
         return AuthResponse.builder()
                 .userEmail(user.getEmail())
@@ -81,9 +84,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String forgotPassword(AuthDto forgotPasswordDto) {
+    public String forgotPassword(AuthDto forgotPasswordDto) throws UserNotFound, InputBlank {
+        if (forgotPasswordDto.getEmail().isBlank())
+            throw new InputBlank("Email is required");
+
         UserEntity user = userRepository.findByEmail(forgotPasswordDto.getEmail()).orElseThrow(
-                () -> new UsernameNotFoundException("Incorrect email address")
+                () -> new UserNotFound("Incorrect email address")
         );
 
         sendMails.sendPasswordResetEmail(user);
@@ -91,9 +97,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String updatePassword(String token, AuthDto updatePasswordDto) {
+    public String updatePassword(String token, AuthDto updatePasswordDto) throws UserNotFound {
+        if (updatePasswordDto.getPassword().isBlank())
+            throw new InputBlank("Password is required");
+
         UserToken userToken = userTokenRepository.findByToken(token).orElseThrow(
-                () -> new UsernameNotFoundException("Password update failed")
+                () -> new UserNotFound("Password update failed")
         );
 
         UserEntity user = userToken.getUser();
@@ -101,15 +110,6 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
         userTokenRepository.delete(userToken);
         return "Password updated successfully";
-    }
-
-    private void saveUserWithJwt(UserEntity user, String jwt) {
-        JwtOfUser jwtOfUser = JwtOfUser.builder()
-                .user(user)
-                .token(jwt)
-                .build();
-
-        jwtRepository.save(jwtOfUser);
     }
 
 }

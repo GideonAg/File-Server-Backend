@@ -4,15 +4,20 @@ import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.entity.UserEntity;
 import com.amalitechfileserver.fileserverbackend.entity.UserToken;
+import com.amalitechfileserver.fileserverbackend.exception.InputBlank;
+import com.amalitechfileserver.fileserverbackend.repository.FileRepository;
 import com.amalitechfileserver.fileserverbackend.repository.UserTokenRepository;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -22,9 +27,11 @@ public class SendMails {
     @Value("${spring.mail.username}")
     private String fileServerEmail;
 
+    private final FileRepository fileRepository;
     private final UserTokenRepository userTokenRepository;
     private final JavaMailSender javaMailSender;
 
+    @Async
     public void sendVerificationEmail(UserEntity user) {
         String token = getUserToken(user);
         String mailSubject = "File Server Account Verification";
@@ -39,6 +46,7 @@ public class SendMails {
         sendMail(user.getEmail(), mailSubject, mailBody, token);
     }
 
+    @Async
     public void sendPasswordResetEmail(UserEntity user) {
         String token = getUserToken(user);
         String mailSubject = "File Server Password Reset Link";
@@ -47,7 +55,7 @@ public class SendMails {
                 
                 Kindly tap on the link below to reset your account password
                 
-                http://localhost:8080/auth/register/verify?token=%s
+                http://localhost:5173/update-password/%s
                 """;
 
         sendMail(user.getEmail(), mailSubject, mailBody, token);
@@ -71,15 +79,26 @@ public class SendMails {
         String text = String.format(mailBody, token);
         mailMessage.setText(text);
         javaMailSender.send(mailMessage);
-        System.out.println(text);
     }
 
-    public void sendFileShareEmail(FileShareDto fileShareDto, FileEntity fetchedFile) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fileShareDto.getSenderEmail());
-        message.setTo(fileShareDto.getReceiverEmail());
-        message.setSubject(fileShareDto.getSenderEmail() + " sent you a file from File Server");
-        message.setText(String.valueOf(fetchedFile));
+    @Async
+    public void sendFileShareEmail(FileShareDto fileShareDto, FileEntity fetchedFile) throws MessagingException, InputBlank {
+        if (fileShareDto.getReceiverEmail().isBlank())
+            throw new InputBlank("Receiver email is required");
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true);
+        mimeMessageHelper.setTo(fileShareDto.getReceiverEmail());
+        mimeMessageHelper.setFrom(fileServerEmail);
+        mimeMessageHelper.setSubject("File sent to you from File Server");
+
+        ByteArrayResource byteArrayResource = new ByteArrayResource(fetchedFile.getFile());
+        mimeMessageHelper.addAttachment(
+                fetchedFile.getTitle(), byteArrayResource, fetchedFile.getFileType()
+        );
+
         javaMailSender.send(message);
+        fetchedFile.setNumberOfShares(fetchedFile.getNumberOfShares() + 1);
+        fileRepository.save(fetchedFile);
     }
 }
