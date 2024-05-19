@@ -7,8 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class FileDto {
+public class FileDtoAdmin {
     private String id;
     private String title;
     private String description;
+    private int numberOfDownloads;
+    private int numberOfShares;
 }

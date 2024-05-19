@@ -32,4 +32,9 @@ public class Listeners {
     public ResponseEntity<String> inputBlank(InputBlank exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> genericException(Exception exception) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
 }

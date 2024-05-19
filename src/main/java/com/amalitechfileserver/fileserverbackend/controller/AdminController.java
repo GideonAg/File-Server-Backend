@@ -1,14 +1,15 @@
 package com.amalitechfileserver.fileserverbackend.controller;
 
+import com.amalitechfileserver.fileserverbackend.dto.FileDtoAdmin;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
 import com.amalitechfileserver.fileserverbackend.service.FileServerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.List;
 
 @RestController
 //@PreAuthorize("hasRole('ADMIN')")
@@ -25,8 +26,21 @@ public class AdminController {
             @RequestParam(name = "file") MultipartFile file,
             @RequestParam(name = "title") String title,
             @RequestParam(name = "description") String description
-    ) throws IOException {
-        return ResponseEntity.ok(fileServerService.uploadFile(file, title, description));
+    ) throws Exception {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(fileServerService.uploadFile(file, title, description));
+    }
+
+    @GetMapping("/admin/search-for-file/{fileName}")
+//    @PreAuthorize("hasAuthority('admin:read')")
+    public ResponseEntity<List<FileDtoAdmin>> adminSearchForFile(@PathVariable String fileName) {
+        return ResponseEntity.ok(fileServerService.adminSearchForFile(fileName));
+    }
+
+    @GetMapping("/admin/all-files")
+//    @PreAuthorize("hasAuthority('admin:read')")
+    public ResponseEntity<List<FileDtoAdmin>> adminGetAllFiles() {
+        return ResponseEntity.ok(fileServerService.adminGetAllFiles());
     }
 
     @DeleteMapping("/delete/{fileId}")

@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,8 +25,7 @@ public class FileServerController {
 
     @PostMapping("/share")
     public ResponseEntity<String> shareFile(@RequestBody FileShareDto fileShareDto)
-            throws MessagingException, FileNotFound, InputBlank
-    {
+            throws MessagingException, FileNotFound, InputBlank, IOException {
         return ResponseEntity.ok(fileServerService.shareFile(fileShareDto));
     }
 
@@ -35,14 +35,14 @@ public class FileServerController {
         return ResponseEntity.ok().contentType(MediaType.valueOf(file.getFileType())).body(file.getFile());
     }
 
-    @GetMapping("/all-files")
+    @GetMapping("/user/all-files")
     public ResponseEntity<List<FileDto>> getAllFiles() {
-        return ResponseEntity.ok(fileServerService.getAllFiles());
+        return ResponseEntity.ok(fileServerService.userGetAllFiles());
     }
 
-    @GetMapping("/search-for-file/{fileName}")
+    @GetMapping("/user/search-for-file/{fileName}")
     public ResponseEntity<List<FileDto>> searchForFile(@PathVariable String fileName) {
-        return ResponseEntity.ok(fileServerService.searchForFile(fileName));
+        return ResponseEntity.ok(fileServerService.userSearchForFile(fileName));
     }
 
 }
