@@ -34,4 +34,24 @@ public class FileEntity {
 
     @Column(nullable = false)
     private String fileType;
+
+    public FileEntity(String id,
+                      String title,
+                      String description,
+                      int numberOfDownloads,
+                      int numberOfShares) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.numberOfDownloads = numberOfDownloads;
+        this.numberOfShares = numberOfShares;
+    }
+
+    public FileEntity(String id,
+                      String title,
+                      String description) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+    }
 }

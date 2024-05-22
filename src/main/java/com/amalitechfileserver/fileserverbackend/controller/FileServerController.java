@@ -1,6 +1,5 @@
 package com.amalitechfileserver.fileserverbackend.controller;
 
-import com.amalitechfileserver.fileserverbackend.dto.FileDto;
 import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
@@ -13,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
- 
+
 @RestController
 @RequestMapping("/file")
 @RequiredArgsConstructor
@@ -35,12 +34,12 @@ public class FileServerController {
     }
 
     @GetMapping("/user/all-files")
-    public ResponseEntity<List<FileDto>> getAllFiles() {
+    public ResponseEntity<List<FileEntity>> getAllFiles() {
         return ResponseEntity.ok(fileServerService.userGetAllFiles());
     }
 
     @GetMapping("/user/search-for-file/{fileName}")
-    public ResponseEntity<List<FileDto>> searchForFile(@PathVariable String fileName) {
+    public ResponseEntity<List<FileEntity>> searchForFile(@PathVariable String fileName) {
         return ResponseEntity.ok(fileServerService.userSearchForFile(fileName));
     }
 

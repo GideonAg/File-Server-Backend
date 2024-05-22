@@ -1,6 +1,6 @@
 package com.amalitechfileserver.fileserverbackend.controller;
 
-import com.amalitechfileserver.fileserverbackend.dto.FileDtoAdmin;
+import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
 import com.amalitechfileserver.fileserverbackend.service.FileServerService;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +33,13 @@ public class AdminController {
 
     @GetMapping("/admin/search-for-file/{fileName}")
 //    @PreAuthorize("hasAuthority('admin:read')")
-    public ResponseEntity<List<FileDtoAdmin>> adminSearchForFile(@PathVariable String fileName) {
+    public ResponseEntity<List<FileEntity>> adminSearchForFile(@PathVariable String fileName) {
         return ResponseEntity.ok(fileServerService.adminSearchForFile(fileName));
     }
 
     @GetMapping("/admin/all-files")
 //    @PreAuthorize("hasAuthority('admin:read')")
-    public ResponseEntity<List<FileDtoAdmin>> adminGetAllFiles() {
+    public ResponseEntity<List<FileEntity>> adminGetAllFiles() {
         return ResponseEntity.ok(fileServerService.adminGetAllFiles());
     }
 

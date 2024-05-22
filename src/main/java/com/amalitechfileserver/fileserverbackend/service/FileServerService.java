@@ -18,13 +18,13 @@ public interface FileServerService {
 
     FileEntity downloadFile(String fileId) throws FileNotFound;
 
-    List<FileDtoAdmin> adminGetAllFiles();
+    List<FileEntity> adminGetAllFiles();
 
     String deleteFileById(String fileId) throws FileNotFound;
 
-    List<FileDtoAdmin> adminSearchForFile(String fileName);
+    List<FileEntity> adminSearchForFile(String fileName);
 
-    List<FileDto> userGetAllFiles();
+    List<FileEntity> userGetAllFiles();
 
-    List<FileDto> userSearchForFile(String fileName);
+    List<FileEntity> userSearchForFile(String fileName);
 }

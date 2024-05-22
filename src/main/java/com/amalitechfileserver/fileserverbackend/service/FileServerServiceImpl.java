@@ -58,16 +58,8 @@ public class FileServerServiceImpl implements FileServerService{
     }
 
     @Override
-    public List<FileDtoAdmin> adminGetAllFiles() {
-        return fileRepository.findAll().stream().map( file ->
-                FileDtoAdmin.builder()
-                        .id(file.getId())
-                        .title(file.getTitle())
-                        .description(file.getDescription())
-                        .numberOfDownloads(file.getNumberOfDownloads())
-                        .numberOfShares(file.getNumberOfShares())
-                        .build()
-        ).toList();
+    public List<FileEntity> adminGetAllFiles() {
+        return fileRepository.adminGetAllFiles();
     }
 
     @Override
@@ -79,26 +71,18 @@ public class FileServerServiceImpl implements FileServerService{
     }
 
     @Override
-    public List<FileDtoAdmin> adminSearchForFile(String fileName) {
-        return adminGetAllFiles().stream()
-                .filter(fileDtoAdmin -> fileDtoAdmin.getTitle().toLowerCase().contains(fileName.toLowerCase()))
-                .toList();
+    public List<FileEntity> adminSearchForFile(String fileName) {
+        return fileRepository.adminSearchForFile(fileName);
     }
 
     @Override
-    public List<FileDto> userGetAllFiles() {
-        return fileRepository.findAll().stream().map(file -> FileDto.builder()
-                .id(file.getId())
-                .title(file.getTitle())
-                .description(file.getDescription())
-                .build()).toList();
+    public List<FileEntity> userGetAllFiles() {
+        return fileRepository.userGetAllFiles();
     }
 
     @Override
-    public List<FileDto> userSearchForFile(String fileName) {
-        return userGetAllFiles().stream()
-                .filter(file -> file.getTitle().toLowerCase().contains(fileName.toLowerCase()))
-                .toList();
+    public List<FileEntity> userSearchForFile(String fileName) {
+        return fileRepository.userSearchForFile(fileName);
     }
 
 }
