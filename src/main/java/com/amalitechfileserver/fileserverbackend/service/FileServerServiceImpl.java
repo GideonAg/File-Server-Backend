@@ -1,8 +1,6 @@
 package com.amalitechfileserver.fileserverbackend.service;
 
 import com.amalitechfileserver.fileserverbackend.auth.SendMails;
-import com.amalitechfileserver.fileserverbackend.dto.FileDto;
-import com.amalitechfileserver.fileserverbackend.dto.FileDtoAdmin;
 import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
