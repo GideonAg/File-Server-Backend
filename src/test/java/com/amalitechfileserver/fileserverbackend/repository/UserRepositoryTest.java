@@ -35,15 +35,15 @@ public class UserRepositoryTest {
     @Test
     public void UserRepository_FindByEmail_ReturnUser() {
 
-        UserEntity userOne = UserEntity.builder()
+        UserEntity user = UserEntity.builder()
                 .email("userOne@gmail.com")
                 .password("password")
                 .role(Role.USER)
                 .build();
 
-        userRepository.save(userOne);
-        Optional<UserEntity> user = userRepository.findByEmail(userOne.getEmail());
+        userRepository.save(user);
+        Optional<UserEntity> fetchedUser = userRepository.findByEmail(user.getEmail());
 
-        Assertions.assertThat(user.get()).isNotNull();
+        Assertions.assertThat(fetchedUser.isPresent()).isEqualTo(true);
     }
 }

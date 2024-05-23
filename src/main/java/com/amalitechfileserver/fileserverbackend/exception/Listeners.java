@@ -35,6 +35,6 @@ public class Listeners {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> genericException(Exception exception) {
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("something went wrong");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
     }
 }

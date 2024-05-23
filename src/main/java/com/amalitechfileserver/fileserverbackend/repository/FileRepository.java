@@ -11,7 +11,7 @@ import java.util.List;
 public interface FileRepository extends JpaRepository<FileEntity, String> {
 
     @Query(value = """
-            select new FileEntity(f.title, f.description, f.id, f.numberOfDownloads, f.numberOfShares)
+            select new FileEntity(f.id, f.title, f.description, f.numberOfDownloads, f.numberOfShares)
             from FileEntity f
             """)
     List<FileEntity> adminGetAllFiles();
