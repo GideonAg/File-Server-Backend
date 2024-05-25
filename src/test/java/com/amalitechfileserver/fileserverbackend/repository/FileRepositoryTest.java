@@ -2,6 +2,7 @@ package com.amalitechfileserver.fileserverbackend.repository;
 
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -18,13 +19,20 @@ public class FileRepositoryTest {
     @Autowired
     private FileRepository fileRepository;
 
-    @Test
-    public void FileRepository_Save_ReturnSavedFile() {
+    private FileEntity file;
 
-        FileEntity file = FileEntity.builder()
+    @BeforeEach
+    public void init() {
+        file = FileEntity.builder()
                 .title("Title of file")
                 .description("Description of file")
+                .fileType("fileType")
+                .file(new byte[0])
                 .build();
+    }
+
+    @Test
+    public void FileRepository_Save_ReturnSavedFile() {
 
         FileEntity savedFile = fileRepository.save(file);
 
@@ -35,13 +43,6 @@ public class FileRepositoryTest {
     @Test
     public void FileRepository_FindById_ReturnFile() {
 
-        FileEntity file = FileEntity.builder()
-                .title("Title of file")
-                .description("Description of file")
-                .fileType("fileType")
-                .file(new byte[0])
-                .build();
-
         FileEntity savedFile = fileRepository.save(file);
         Optional<FileEntity> fetchedFile = fileRepository.findById(savedFile.getId());
 
@@ -51,39 +52,18 @@ public class FileRepositoryTest {
     @Test
     public void FileRepository_GetAllFiles_ReturnFileList() {
 
-        FileEntity fileOne = FileEntity.builder()
-                .title("Title of file")
-                .description("Description of file")
-                .file(new byte[0])
-                .fileType("fileType")
-                .build();
-
-        FileEntity fileTwo = FileEntity.builder()
-                .title("Title of file")
-                .description("Description of file")
-                .file(new byte[0])
-                .fileType("fileTye")
-                .build();
-
-        fileRepository.save(fileOne);
-        fileRepository.save(fileTwo);
+        fileRepository.save(file);
 
         List<FileEntity> adminGetAllFiles = fileRepository.adminGetAllFiles();
         List<FileEntity> userGetAllFiles = fileRepository.userGetAllFiles();
 
-        Assertions.assertThat(adminGetAllFiles.size()).isEqualTo(2);
-        Assertions.assertThat(userGetAllFiles.size()).isEqualTo(2);
+        Assertions.assertThat(adminGetAllFiles.size()).isEqualTo(1);
+        Assertions.assertThat(userGetAllFiles.size()).isEqualTo(1);
     }
 
     @Test
     public void FileRepository_SearchForFile_ReturnFiles() {
 
-        FileEntity file = FileEntity.builder()
-                .title("Title of file")
-                .description("Description of file")
-                .file(new byte[0])
-                .fileType("fileType")
-                .build();
         FileEntity savedFile = fileRepository.save(file);
 
         List<FileEntity> adminFiles = fileRepository.adminSearchForFile(savedFile.getTitle());
@@ -91,6 +71,17 @@ public class FileRepositoryTest {
 
         Assertions.assertThat(adminFiles.size()).isEqualTo(1);
         Assertions.assertThat(userFiles.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void FileRepository_DeleteFileById() {
+
+        FileEntity savedFile = fileRepository.save(file);
+
+        fileRepository.deleteById(savedFile.getId());
+        Optional<FileEntity> fetchedFile = fileRepository.findById(savedFile.getId());
+
+        Assertions.assertThat(fetchedFile.isPresent()).isEqualTo(false);
     }
 
 }
