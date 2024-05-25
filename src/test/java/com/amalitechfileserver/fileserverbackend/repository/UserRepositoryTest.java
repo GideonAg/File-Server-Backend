@@ -3,6 +3,7 @@ package com.amalitechfileserver.fileserverbackend.repository;
 import com.amalitechfileserver.fileserverbackend.auth.Role;
 import com.amalitechfileserver.fileserverbackend.entity.UserEntity;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -18,14 +19,19 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
-    public void UserRepository_Save_ReturnSavedUser() {
+    private UserEntity user;
 
-        UserEntity user = UserEntity.builder()
+    @BeforeEach
+    public void init() {
+        user = UserEntity.builder()
                 .email("user@gmail.com")
                 .password("password")
                 .role(Role.USER)
                 .build();
+    }
+
+    @Test
+    public void UserRepository_Save_ReturnSavedUser() {
 
         UserEntity savedUser = userRepository.save(user);
         Assertions.assertThat(savedUser).isNotNull();
@@ -34,12 +40,6 @@ public class UserRepositoryTest {
 
     @Test
     public void UserRepository_FindByEmail_ReturnUser() {
-
-        UserEntity user = UserEntity.builder()
-                .email("userOne@gmail.com")
-                .password("password")
-                .role(Role.USER)
-                .build();
 
         userRepository.save(user);
         Optional<UserEntity> fetchedUser = userRepository.findByEmail(user.getEmail());

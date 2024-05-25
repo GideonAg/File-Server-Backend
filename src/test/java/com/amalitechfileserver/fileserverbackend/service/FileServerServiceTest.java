@@ -79,7 +79,6 @@ public class FileServerServiceTest {
                                         .build();
 
         when(fileRepository.findById(fileId)).thenReturn(Optional.of(file));
-        sendMails.sendFileShareEmail(fileShareDto, file);
 
         String response = fileServerService.shareFile(fileShareDto);
 
