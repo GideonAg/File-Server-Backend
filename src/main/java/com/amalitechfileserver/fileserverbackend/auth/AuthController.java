@@ -6,6 +6,7 @@ import com.amalitechfileserver.fileserverbackend.exception.UserAlreadyRegistered
 import com.amalitechfileserver.fileserverbackend.exception.UserNotFound;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class AuthController {
     public ResponseEntity<String> register(@Valid @RequestBody AuthDto registerDto)
             throws UserAlreadyRegisteredException, InputBlank
     {
-        return ResponseEntity.ok(authService.register(registerDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(registerDto));
     }
 
     @PostMapping("/login")
