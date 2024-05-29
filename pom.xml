@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.amalitechfileserver</groupId>
 	<artifactId>File-Server-Backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>File Server Backend</name>
 	<description>File Server Backend</description>
 	<properties>
