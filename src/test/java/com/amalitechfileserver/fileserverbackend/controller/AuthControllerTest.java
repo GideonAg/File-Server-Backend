@@ -91,4 +91,35 @@ public class AuthControllerTest {
         results.andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    public void AuthController_ForgotPassword_ReturnString() throws Exception {
+
+        given(authService
+                .forgotPassword(authDto)
+        ).willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+
+        ResultActions response = mockMvc.perform(post("/auth/forgot-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(authDto))
+        );
+
+        response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void AuthController_UpdatePassword_ReturnString() throws Exception {
+
+        String token = "token";
+        given(authService
+                .updatePassword(token, authDto)
+        ).willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+
+        ResultActions response = mockMvc.perform(post("/auth/update-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                        .param("token", token)
+                .content(objectMapper.writeValueAsString(authDto)));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
 }
