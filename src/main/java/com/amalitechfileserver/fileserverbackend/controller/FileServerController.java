@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ public class FileServerController {
 
     @PostMapping("/share")
     public ResponseEntity<String> shareFile(@RequestBody FileShareDto fileShareDto)
-            throws MessagingException, FileNotFound, InputBlank {
+            throws MessagingException, FileNotFound, InputBlank, IOException {
         return ResponseEntity.ok(fileServerService.shareFile(fileShareDto));
     }
 

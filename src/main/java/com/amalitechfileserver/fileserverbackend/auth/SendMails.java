@@ -7,11 +7,14 @@ import com.amalitechfileserver.fileserverbackend.entity.UserToken;
 import com.amalitechfileserver.fileserverbackend.exception.InputBlank;
 import com.amalitechfileserver.fileserverbackend.repository.FileRepository;
 import com.amalitechfileserver.fileserverbackend.repository.UserTokenRepository;
+import jakarta.activation.DataHandler;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -27,6 +30,9 @@ public class SendMails {
     @Value("${spring.mail.username}")
     private String fileServerEmail;
 
+    @Value("${file.server.base-url}")
+    private String fileServerBaseUrl;
+
     private final FileRepository fileRepository;
     private final UserTokenRepository userTokenRepository;
     private final JavaMailSender javaMailSender;
@@ -40,10 +46,10 @@ public class SendMails {
                 
                 Kindly tap on the link below to verify your account
                 
-                http://localhost:8080/auth/register/verify?token=%s
+                %s
                 """;
-
-        sendMail(user.getEmail(), mailSubject, mailBody, token);
+        String url = fileServerBaseUrl + "/auth/register/verify?token=" + token;
+        sendMail(user.getEmail(), mailSubject, mailBody, url);
     }
 
     @Async
@@ -57,7 +63,6 @@ public class SendMails {
                 
                 http://localhost:5173/update-password/%s
                 """;
-
         sendMail(user.getEmail(), mailSubject, mailBody, token);
     }
 
@@ -71,34 +76,50 @@ public class SendMails {
         return token;
     }
 
-    private void sendMail(String userEmail, String mailSubject, String mailBody, String token) {
+    private void sendMail(String userEmail, String mailSubject, String mailBody, String url) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(fileServerEmail);
         mailMessage.setTo(userEmail);
         mailMessage.setSubject(mailSubject);
-        String text = String.format(mailBody, token);
+        String text = String.format(mailBody, url);
         mailMessage.setText(text);
         javaMailSender.send(mailMessage);
     }
 
     @Async
-    public void sendFileShareEmail(FileShareDto fileShareDto, FileEntity fetchedFile) throws MessagingException, InputBlank {
+    public void sendFileShareEmail(FileShareDto fileShareDto, FileEntity fetchedFile) throws InputBlank {
         if (fileShareDto.getReceiverEmail().isBlank())
             throw new InputBlank("Receiver email is required");
 
-        MimeMessage message = javaMailSender.createMimeMessage();
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeBodyPart mimeBodyPart = getMimeBodyPart(fileShareDto, fetchedFile, message);
+
+            MimeMultipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBodyPart);
+            message.setContent(multipart);
+
+            javaMailSender.send(message);
+            fetchedFile.setNumberOfShares(fetchedFile.getNumberOfShares() + 1);
+            fileRepository.save(fetchedFile);
+        } catch(Exception e) {
+            throw new RuntimeException("Failed to send file, try again later");
+        }
+    }
+
+    private MimeBodyPart getMimeBodyPart(FileShareDto fileShareDto, FileEntity fetchedFile, MimeMessage message) throws MessagingException {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true);
         mimeMessageHelper.setTo(fileShareDto.getReceiverEmail());
         mimeMessageHelper.setFrom(fileServerEmail);
         mimeMessageHelper.setSubject("File sent to you from File Server");
 
-        ByteArrayResource byteArrayResource = new ByteArrayResource(fetchedFile.getFile());
-        mimeMessageHelper.addAttachment(
-                fetchedFile.getTitle(), byteArrayResource, fetchedFile.getFileType()
-        );
-
-        javaMailSender.send(message);
-        fetchedFile.setNumberOfShares(fetchedFile.getNumberOfShares() + 1);
-        fileRepository.save(fetchedFile);
+        String fileType = fetchedFile.getFileType();
+        String extension = fileType.substring(fileType.indexOf('/') + 1);
+        String filename = fetchedFile.getTitle() + "." + extension;
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        ByteArrayDataSource dataSource = new ByteArrayDataSource(fetchedFile.getFile(), fetchedFile.getFileType());
+        mimeBodyPart.setDataHandler(new DataHandler(dataSource));
+        mimeBodyPart.setFileName(filename);
+        return mimeBodyPart;
     }
 }
