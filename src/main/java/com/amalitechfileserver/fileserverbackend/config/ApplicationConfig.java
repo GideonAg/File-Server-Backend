@@ -42,9 +42,9 @@ public class ApplicationConfig {
         return username -> {
             try {
                 return userRepository.findByEmail(username)
-                                .orElseThrow(() -> new UserNotFound("Invalid email or password"));
+                                .orElseThrow(() -> new UserNotFound("Incorrect email or password"));
             } catch (UserNotFound e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException(e.getMessage());
             }
         };
     }
