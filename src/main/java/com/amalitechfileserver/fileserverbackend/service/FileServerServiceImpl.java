@@ -1,6 +1,7 @@
 package com.amalitechfileserver.fileserverbackend.service;
 
 import com.amalitechfileserver.fileserverbackend.auth.SendMails;
+import com.amalitechfileserver.fileserverbackend.dto.DownloadedFile;
 import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
@@ -53,14 +54,28 @@ public class FileServerServiceImpl implements FileServerService{
     }
 
     @Override
-    public FileEntity downloadFile(String fileId) throws FileNotFound {
+    public DownloadedFile downloadFile(String fileId) throws FileNotFound {
         FileEntity fetchedFile = fileRepository.findById(fileId)
                 .orElseThrow(() -> new FileNotFound("File not found"));
+
+        String filename = getFilename(fetchedFile);
+
+        DownloadedFile downloadedFile = DownloadedFile.builder()
+                .fileByteArray(fetchedFile.getFile())
+                .fileType(fetchedFile.getFileType())
+                .filename(filename)
+                .build();
 
         int numberOfDownloads = fetchedFile.getNumberOfDownloads() + 1;
         fetchedFile.setNumberOfDownloads(numberOfDownloads);
         fileRepository.save(fetchedFile);
-        return fetchedFile;
+        return downloadedFile;
+    }
+
+    private static String getFilename(FileEntity fetchedFile) {
+        String extension = fetchedFile.getFileType()
+                .substring(fetchedFile.getFileType().indexOf("/") + 1);
+        return fetchedFile.getTitle() + "." + extension;
     }
 
     @Override

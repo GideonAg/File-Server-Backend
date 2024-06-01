@@ -1,5 +1,6 @@
 package com.amalitechfileserver.fileserverbackend.service;
 
+import com.amalitechfileserver.fileserverbackend.dto.DownloadedFile;
 import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
@@ -15,7 +16,7 @@ public interface FileServerService {
 
     String shareFile(FileShareDto fileShareDto) throws MessagingException, FileNotFound, InputBlank, IOException;
 
-    FileEntity downloadFile(String fileId) throws FileNotFound;
+    DownloadedFile downloadFile(String fileId) throws FileNotFound;
 
     List<FileEntity> adminGetAllFiles();
 

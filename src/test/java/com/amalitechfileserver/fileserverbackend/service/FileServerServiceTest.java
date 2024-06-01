@@ -1,6 +1,7 @@
 package com.amalitechfileserver.fileserverbackend.service;
 
 import com.amalitechfileserver.fileserverbackend.auth.SendMails;
+import com.amalitechfileserver.fileserverbackend.dto.DownloadedFile;
 import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
@@ -16,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -66,11 +68,11 @@ public class FileServerServiceTest {
                 "Title of file",
                 "Description of file");
 
-        Assertions.assertThat(response).isNotBlank();
+        Assertions.assertThat(response).contains("File uploaded successfully");
     }
 
     @Test
-    public void FileService_ShareFile_ReturnsString() throws MessagingException, FileNotFound {
+    public void FileService_ShareFile_ReturnsString() throws MessagingException, FileNotFound, IOException {
 
         String fileId = UUID.randomUUID().toString();
         FileShareDto fileShareDto = FileShareDto.builder()
@@ -82,7 +84,8 @@ public class FileServerServiceTest {
 
         String response = fileServerService.shareFile(fileShareDto);
 
-        Assertions.assertThat(response).isNotBlank();
+        Assertions.assertThat(response)
+                .contains(String.format("File sent to %s successfully", fileShareDto.getReceiverEmail()));
     }
 
     @Test
@@ -94,7 +97,7 @@ public class FileServerServiceTest {
         assert file != null;
         when(fileRepository.save(file)).thenReturn(fileUpdatedDownload);
 
-        FileEntity downloadedFile = fileServerService.downloadFile(fileId);
+        DownloadedFile downloadedFile = fileServerService.downloadFile(fileId);
 
         Assertions.assertThat(downloadedFile).isNotNull();
     }

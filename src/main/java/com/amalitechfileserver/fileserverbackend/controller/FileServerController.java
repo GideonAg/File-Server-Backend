@@ -1,5 +1,6 @@
 package com.amalitechfileserver.fileserverbackend.controller;
 
+import com.amalitechfileserver.fileserverbackend.dto.DownloadedFile;
 import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
@@ -30,8 +31,10 @@ public class FileServerController {
 
     @GetMapping("/download/{id}")
     public ResponseEntity<?> downloadFile(@PathVariable(name = "id") String id) throws FileNotFound {
-        FileEntity file = fileServerService.downloadFile(id);
-        return ResponseEntity.ok().contentType(MediaType.valueOf(file.getFileType())).body(file.getFile());
+        DownloadedFile file = fileServerService.downloadFile(id);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=" + file.filename())
+                .contentType(MediaType.valueOf(file.fileType())).body(file.fileByteArray());
     }
 
     @GetMapping("/user/all-files")
