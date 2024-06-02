@@ -31,7 +31,6 @@ public class FileServerController {
     }
 
     @GetMapping("/download/{id}")
-    @Cacheable("files")
     public ResponseEntity<?> downloadFile(@PathVariable(name = "id") String id) throws FileNotFound {
         DownloadedFile file = fileServerService.downloadFile(id);
         return ResponseEntity.ok()
@@ -40,13 +39,11 @@ public class FileServerController {
     }
 
     @GetMapping("/user/all-files")
-    @Cacheable("files")
     public ResponseEntity<List<FileEntity>> getAllFiles() {
         return ResponseEntity.ok(fileServerService.userGetAllFiles());
     }
 
     @GetMapping("/user/search-for-file/{fileName}")
-    @Cacheable("files")
     public ResponseEntity<List<FileEntity>> searchForFile(@PathVariable String fileName) {
         return ResponseEntity.ok(fileServerService.userSearchForFile(fileName));
     }
