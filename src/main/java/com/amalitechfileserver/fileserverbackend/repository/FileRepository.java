@@ -23,7 +23,7 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
     List<FileEntity> userGetAllFiles();
 
     @Query(value = """
-            select new FileEntity(f.id, f.title, f.description)
+            select new FileEntity(f.id, f.title, f.description,  f.numberOfDownloads, f.numberOfShares)
             from FileEntity f
             where f.title ilike %:fileName%
             """)
