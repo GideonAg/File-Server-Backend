@@ -4,6 +4,8 @@ import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
 import com.amalitechfileserver.fileserverbackend.service.FileServerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,18 +35,21 @@ public class AdminController {
 
     @GetMapping("/admin/search-for-file/{fileName}")
 //    @PreAuthorize("hasAuthority('admin:read')")
+    @Cacheable("files")
     public ResponseEntity<List<FileEntity>> adminSearchForFile(@PathVariable String fileName) {
         return ResponseEntity.ok(fileServerService.adminSearchForFile(fileName));
     }
 
     @GetMapping("/admin/all-files")
 //    @PreAuthorize("hasAuthority('admin:read')")
+    @Cacheable("files")
     public ResponseEntity<List<FileEntity>> adminGetAllFiles() {
         return ResponseEntity.ok(fileServerService.adminGetAllFiles());
     }
 
     @DeleteMapping("/delete/{fileId}")
 //    @PreAuthorize("hasAuthority('admin:delete')")
+    @CacheEvict("files")
     public ResponseEntity<String> deleteFileById(@PathVariable(name = "fileId") String fileId) throws FileNotFound {
         return ResponseEntity.ok(fileServerService.deleteFileById(fileId));
     }
