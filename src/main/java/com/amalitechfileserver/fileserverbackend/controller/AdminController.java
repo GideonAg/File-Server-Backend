@@ -3,6 +3,7 @@ package com.amalitechfileserver.fileserverbackend.controller;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
 import com.amalitechfileserver.fileserverbackend.service.FileServerService;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

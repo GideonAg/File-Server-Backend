@@ -4,7 +4,6 @@ import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.entity.UserEntity;
 import com.amalitechfileserver.fileserverbackend.entity.UserToken;
-import com.amalitechfileserver.fileserverbackend.exception.InputBlank;
 import com.amalitechfileserver.fileserverbackend.repository.FileRepository;
 import com.amalitechfileserver.fileserverbackend.repository.UserTokenRepository;
 import jakarta.activation.DataHandler;
@@ -87,9 +86,7 @@ public class SendMails {
     }
 
     @Async
-    public void sendFileShareEmail(FileShareDto fileShareDto, FileEntity fetchedFile) throws InputBlank {
-        if (fileShareDto.getReceiverEmail().isBlank())
-            throw new InputBlank("Receiver email is required");
+    public void sendFileShareEmail(FileShareDto fileShareDto, FileEntity fetchedFile) {
 
         try {
             MimeMessage message = javaMailSender.createMimeMessage();

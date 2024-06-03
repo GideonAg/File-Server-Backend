@@ -4,9 +4,9 @@ import com.amalitechfileserver.fileserverbackend.dto.DownloadedFile;
 import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
-import com.amalitechfileserver.fileserverbackend.exception.InputBlank;
 import com.amalitechfileserver.fileserverbackend.service.FileServerService;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +24,8 @@ public class FileServerController {
     private final FileServerService fileServerService;
 
     @PostMapping("/share")
-    public ResponseEntity<String> shareFile(@RequestBody FileShareDto fileShareDto)
-            throws MessagingException, FileNotFound, InputBlank, IOException {
+    public ResponseEntity<String> shareFile(@RequestBody @Valid FileShareDto fileShareDto)
+            throws MessagingException, FileNotFound, IOException {
         return ResponseEntity.ok(fileServerService.shareFile(fileShareDto));
     }
 

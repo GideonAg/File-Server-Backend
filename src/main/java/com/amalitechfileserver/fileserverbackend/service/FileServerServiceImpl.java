@@ -5,15 +5,13 @@ import com.amalitechfileserver.fileserverbackend.dto.DownloadedFile;
 import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
-import com.amalitechfileserver.fileserverbackend.exception.InputBlank;
 import com.amalitechfileserver.fileserverbackend.repository.FileRepository;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -29,7 +27,7 @@ public class FileServerServiceImpl implements FileServerService{
             throw new MaxUploadSizeExceededException(20000000);
 
         if (file.isEmpty() || title.isBlank() || description.isBlank())
-            throw new InputBlank("Title, description and file are required");
+            throw new Exception("File title and description are required");
 
         FileEntity fileEntity = FileEntity.builder()
                 .title(title)
@@ -42,9 +40,7 @@ public class FileServerServiceImpl implements FileServerService{
     }
 
     @Override
-    public String shareFile(FileShareDto fileShareDto) throws MessagingException, FileNotFound, InputBlank, IOException {
-        if (fileShareDto.getReceiverEmail().isBlank() || fileShareDto.getFileId().isBlank())
-            throw new InputBlank("Receiver email and file id are required");
+    public String shareFile(FileShareDto fileShareDto) throws FileNotFound {
 
         FileEntity fetchedFile = fileRepository.findById(fileShareDto.getFileId())
                 .orElseThrow(() -> new FileNotFound("File not found"));

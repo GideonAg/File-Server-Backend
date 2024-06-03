@@ -4,6 +4,8 @@ import com.amalitechfileserver.fileserverbackend.auth.AuthController;
 import com.amalitechfileserver.fileserverbackend.auth.AuthService;
 import com.amalitechfileserver.fileserverbackend.config.JwtService;
 import com.amalitechfileserver.fileserverbackend.dto.AuthDto;
+import com.amalitechfileserver.fileserverbackend.dto.ForgotPasswordDto;
+import com.amalitechfileserver.fileserverbackend.dto.PasswordUpdateDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -94,13 +96,17 @@ public class AuthControllerTest {
     @Test
     public void AuthController_ForgotPassword_ReturnString() throws Exception {
 
+        ForgotPasswordDto forgotPasswordDto = ForgotPasswordDto.builder()
+                .email("user@gmail.com")
+                .build();
+
         given(authService
-                .forgotPassword(authDto)
+                .forgotPassword(forgotPasswordDto)
         ).willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
 
         ResultActions response = mockMvc.perform(post("/auth/forgot-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(authDto))
+                .content(objectMapper.writeValueAsString(forgotPasswordDto))
         );
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
@@ -109,15 +115,19 @@ public class AuthControllerTest {
     @Test
     public void AuthController_UpdatePassword_ReturnString() throws Exception {
 
+        PasswordUpdateDto passwordUpdateDto = PasswordUpdateDto.builder()
+                .password("password")
+                .build();
+
         String token = "token";
         given(authService
-                .updatePassword(token, authDto)
+                .updatePassword(token, passwordUpdateDto)
         ).willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
 
         ResultActions response = mockMvc.perform(post("/auth/update-password")
                 .contentType(MediaType.APPLICATION_JSON)
                         .param("token", token)
-                .content(objectMapper.writeValueAsString(authDto)));
+                .content(objectMapper.writeValueAsString(passwordUpdateDto)));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }

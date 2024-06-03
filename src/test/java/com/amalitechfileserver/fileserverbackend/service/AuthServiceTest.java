@@ -6,6 +6,8 @@ import com.amalitechfileserver.fileserverbackend.auth.Role;
 import com.amalitechfileserver.fileserverbackend.auth.SendMails;
 import com.amalitechfileserver.fileserverbackend.config.JwtService;
 import com.amalitechfileserver.fileserverbackend.dto.AuthDto;
+import com.amalitechfileserver.fileserverbackend.dto.ForgotPasswordDto;
+import com.amalitechfileserver.fileserverbackend.dto.PasswordUpdateDto;
 import com.amalitechfileserver.fileserverbackend.entity.UserEntity;
 import com.amalitechfileserver.fileserverbackend.entity.UserToken;
 import com.amalitechfileserver.fileserverbackend.exception.UserAlreadyRegisteredException;
@@ -20,7 +22,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -134,11 +135,15 @@ public class AuthServiceTest {
     @Test
     public void AuthService_ForgotPassword_ReturnString() throws UserNotFound {
 
+        ForgotPasswordDto forgotPasswordDto = ForgotPasswordDto.builder()
+                .email("user@gmail.com")
+                .build();
+
         when(userRepository
-                .findByEmail(authDto.getEmail())
+                .findByEmail(forgotPasswordDto.getEmail())
         ).thenReturn(Optional.ofNullable(user));
 
-        String response = authService.forgotPassword(authDto);
+        String response = authService.forgotPassword(forgotPasswordDto);
 
         Assertions.assertThat(response).isNotBlank();
     }
@@ -146,10 +151,14 @@ public class AuthServiceTest {
     @Test
     public void AuthService_UpdatedPassword_ReturnString() throws UserNotFound {
 
+        PasswordUpdateDto passwordUpdateDto = PasswordUpdateDto.builder()
+                        .password("password")
+                                .build();
+
         when(userTokenRepository.findByToken(token)
         ).thenReturn(Optional.ofNullable(userToken));
 
-        String response = authService.updatePassword(token, authDto);
+        String response = authService.updatePassword(token, passwordUpdateDto);
 
         Assertions.assertThat(response).isNotBlank();
     }

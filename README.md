@@ -26,14 +26,6 @@
 |--------|----------------------------------------------------------|
 | POST   | https://file-server-backend-1n25.onrender.com/auth/login |
 
-### Header
-
-| Type         | Property Name    |
-|--------------|------------------|
-| Allow        | POST, OPTION     |
-| Content-Type | Application/Json |
-| Vary         | Accept           |
-
 ### JSON Body
 
 | Property Name | type   | required |
@@ -46,8 +38,10 @@
 | Code | Message                            |
 |------|------------------------------------|
 | 403  | "Bad Credentials"                  |
+| 403  | "User is disabled"                 |
+| 400  | "Invalid email address format"     |
 | 400  | "Email or password can't be blank" |
-| 404  | "User Not Found"                   |
+| 403  | "User Not Found"                   |
 
 ### Successful Response Example
 
@@ -67,14 +61,6 @@
 |--------|-------------------------------------------------------------|
 | POST   | https://file-server-backend-1n25.onrender.com/auth/register |
 
-### Header
-
-| Type         | Property Name    |
-|--------------|------------------|
-| Allow        | POST, OPTION     |
-| Content-Type | Application/Json |
-| Vary         | Accept           |
-
 ### JSON Body
 
 | Property Name | type   | required |
@@ -87,7 +73,7 @@
 | Code | Message                            |
 |------|------------------------------------|
 | 406  | "User is already registered        |
-| 406  | "Invalid email address format"     |
+| 400  | "Invalid email address format"     |
 | 400  | "Email or password can't be blank" |
 ### Successful Response Example
 
@@ -102,14 +88,6 @@
 | Method | URL                                                                |
 |--------|--------------------------------------------------------------------|
 | GET    | https://file-server-backend-1n25.onrender.com/auth/register/verify |
-
-### Header
-
-| Type         | Property Name    |
-|--------------|------------------|
-| Allow        | POST, OPTION     |
-| Content-Type | Application/Json |
-| Vary         | Accept           |
 
 ### Request Param
 
@@ -139,7 +117,6 @@
 |--------------|------------------|
 | Allow        | POST, OPTION     |
 | Content-Type | Application/Json |
-| Vary         | Accept           |
 
 ### Request Param
 | Property Name | type   | required |
@@ -154,11 +131,11 @@
 
 ### Error Responses
 
-| Code | Message                                  |
-|------|------------------------------------------|
-| 400  | "Password Must be at least 4 characters" |
-| 404  | "Password update failed"                 |
-| 400  | "Password is required"                   |
+| Code | Message                                                               |
+|------|-----------------------------------------------------------------------|
+| 400  | "Password should contain numbers and digits only. 3 to 20 characters" |
+| 404  | "Password update failed"                                              |
+| 400  | "Password is required"                                                |
 
 ### Successful Response Example
 
@@ -174,14 +151,6 @@
 |--------|--------------------------------------------------------------------|
 | POST   | https://file-server-backend-1n25.onrender.com/auth/forgot-password |
 
-### Header
-
-| Type         | Property Name    |
-|--------------|------------------|
-| Allow        | POST, OPTION     |
-| Content-Type | Application/Json |
-| Vary         | Accept           |
-
 ### JSON Body
 
 | Property Name | type   | required |
@@ -190,10 +159,11 @@
 
 ### Error Responses
 
-| Code | Message                   |
-|------|---------------------------|
-| 400  | "Email is required"       |
-| 404  | "Incorrect email address" |
+| Code | Message                          |
+|------|----------------------------------|
+| 400  | "Please enter a valid email"     |
+| 400  | "Email cannot be null or empty"  |
+| 404  | "Incorrect email address"        |
 
 ### Successful Response Example
 
@@ -218,7 +188,6 @@
 |--------------|----------------------|
 | Allow        | POST, OPTION         |
 | Content-Type | Application/Json     |
-| Vary         | Accept               |
 | token        | Authentication Token |
 
 ### JSON Body
@@ -256,7 +225,6 @@
 |--------------|----------------------|
 | Allow        | POST, OPTION         |
 | Content-Type | Application/Json     |
-| Vary         | Accept               |
 | token        | Authentication Token |
 
 
@@ -287,51 +255,6 @@
     "numberOfDownloads": 8,
     "numberOfShares": 0,
     "fileType": null
-  },
-  {
-    "id": "fde31cec-63fe-40f3-ad3d-fbb48566446e",
-    "title": "excel",
-    "description": "excel",
-    "file": null,
-    "numberOfDownloads": 2,
-    "numberOfShares": 0,
-    "fileType": null
-  },
-  {
-    "id": "d79c6f74-d88d-4804-9cd9-af63daeaae87",
-    "title": "ppt",
-    "description": "ppt des",
-    "file": null,
-    "numberOfDownloads": 1,
-    "numberOfShares": 0,
-    "fileType": null
-  },
-  {
-    "id": "fda3dcdd-79f8-478b-8c19-e45f083e300b",
-    "title": "fg",
-    "description": "fg",
-    "file": null,
-    "numberOfDownloads": 0,
-    "numberOfShares": 0,
-    "fileType": null
-  },
-  {
-    "id": "9201cd64-0f1b-469b-9736-f0e7aa0dada7",
-    "title": "gdg",
-    "description": "bcc",
-    "file": null,
-    "numberOfDownloads": 0,
-    "numberOfShares": 0,
-    "fileType": null
-  },
-  {
-    "id": "971cb8e2-2657-4db4-abdf-63f1f247e87b",
-    "title": "Guidelines file",
-    "description": "Guidelines description",
-    "file": null,
-    "numberOfDownloads": 10,
-    "numberOfShares": 0,
-    "fileType": null
   }
 ]
 ```
@@ -350,7 +273,6 @@
 |--------------|----------------------|
 | Allow        | POST, OPTION         |
 | Content-Type | Application/Json     |
-| Vary         | Accept               |
 | token        | Authentication Token |
 
 
@@ -389,7 +311,6 @@
 |--------------|----------------------|
 | Allow        | POST, OPTION         |
 | Content-Type | Application/Json     |
-| Vary         | Accept               |
 | token        | Authentication Token |
 
 
@@ -419,7 +340,6 @@
 |--------------|----------------------|
 | Allow        | POST, OPTION         |
 | Content-Type | Application/Json     |
-| Vary         | Accept               |
 | token        | Authentication Token |
 
 
@@ -441,31 +361,6 @@
     "id": "52527a09-8062-41aa-820b-36b02bf0e91b",
     "title": "Devs",
     "description": "compsa"
-  },
-  {
-    "id": "fde31cec-63fe-40f3-ad3d-fbb48566446e",
-    "title": "excel",
-    "description": "excel"
-  },
-  {
-    "id": "d79c6f74-d88d-4804-9cd9-af63daeaae87",
-    "title": "ppt",
-    "description": "ppt des",
-  },
-  {
-    "id": "fda3dcdd-79f8-478b-8c19-e45f083e300b",
-    "title": "fg",
-    "description": "fg",
-  },
-  {
-    "id": "9201cd64-0f1b-469b-9736-f0e7aa0dada7",
-    "title": "gdg",
-    "description": "bcc",
-  },
-  {
-    "id": "971cb8e2-2657-4db4-abdf-63f1f247e87b",
-    "title": "Guidelines file",
-    "description": "Guidelines description",
   }
 ]
 ```
@@ -484,7 +379,6 @@
 |--------------|----------------------|
 | Allow        | POST, OPTION         |
 | Content-Type | Application/Json     |
-| Vary         | Accept               |
 | token        | Authentication Token |
 
 
@@ -525,7 +419,6 @@
 |--------------|----------------------|
 | Allow        | POST, OPTION         |
 | Content-Type | Application/Json     |
-| Vary         | Accept               |
 | token        | Authentication Token |
 
 ### JSON Body
@@ -559,7 +452,6 @@ returns a byte array of the file
 |--------------|----------------------|
 | Allow        | POST, OPTION         |
 | Content-Type | Application/Json     |
-| Vary         | Accept               |
 | token        | Authentication Token |
 
 ### JSON Body
