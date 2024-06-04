@@ -74,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
             userRepository.save(user);
             userTokenRepository.delete(verifyToken.get());
             return "Account verification successful";
-        };
+        }
 
         return "Account already verified";
     }

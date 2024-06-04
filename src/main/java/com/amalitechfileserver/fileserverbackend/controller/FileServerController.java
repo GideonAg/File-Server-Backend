@@ -25,7 +25,7 @@ public class FileServerController {
 
     @PostMapping("/share")
     public ResponseEntity<String> shareFile(@RequestBody @Valid FileShareDto fileShareDto)
-            throws MessagingException, FileNotFound, IOException {
+            throws MessagingException, FileNotFound {
         return ResponseEntity.ok(fileServerService.shareFile(fileShareDto));
     }
 

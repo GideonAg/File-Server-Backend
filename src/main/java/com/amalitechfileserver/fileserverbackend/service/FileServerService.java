@@ -7,13 +7,12 @@ import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
 import jakarta.mail.MessagingException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface FileServerService {
     String uploadFile(MultipartFile file, String title, String description) throws Exception;
 
-    String shareFile(FileShareDto fileShareDto) throws MessagingException, FileNotFound, IOException;
+    String shareFile(FileShareDto fileShareDto) throws MessagingException, FileNotFound;
 
     DownloadedFile downloadFile(String fileId) throws FileNotFound;
 
