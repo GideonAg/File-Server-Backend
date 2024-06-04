@@ -68,7 +68,7 @@ public class FileServerServiceTest {
                 "Title of file",
                 "Description of file");
 
-        Assertions.assertThat(response).contains("File uploaded successfully");
+        Assertions.assertThat(response).isEqualTo("File uploaded successfully");
     }
 
     @Test
@@ -85,7 +85,7 @@ public class FileServerServiceTest {
         String response = fileServerService.shareFile(fileShareDto);
 
         Assertions.assertThat(response)
-                .contains(String.format("File sent to %s successfully", fileShareDto.getReceiverEmail()));
+                .isEqualTo(String.format("File sent to %s successfully", fileShareDto.getReceiverEmail()));
     }
 
     @Test

@@ -96,7 +96,7 @@ public class AuthServiceTest {
 
         String response = authService.register(authDto);
 
-        Assertions.assertThat(response).isNotBlank();
+        Assertions.assertThat(response).isEqualTo("Account verification link sent to email.");
     }
 
     @Test
@@ -129,7 +129,7 @@ public class AuthServiceTest {
 
         String response = authService.verifyAccount(token);
 
-        Assertions.assertThat(response).isNotBlank();
+        Assertions.assertThat(response).isEqualTo("Account verification successful");
     }
 
     @Test
@@ -145,7 +145,7 @@ public class AuthServiceTest {
 
         String response = authService.forgotPassword(forgotPasswordDto);
 
-        Assertions.assertThat(response).isNotBlank();
+        Assertions.assertThat(response).isEqualTo("Password reset link sent to email");
     }
 
     @Test
@@ -160,6 +160,6 @@ public class AuthServiceTest {
 
         String response = authService.updatePassword(token, passwordUpdateDto);
 
-        Assertions.assertThat(response).isNotBlank();
+        Assertions.assertThat(response).isEqualTo("Password updated successfully");
     }
 }
