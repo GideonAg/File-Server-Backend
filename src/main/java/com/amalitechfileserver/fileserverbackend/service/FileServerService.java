@@ -3,14 +3,17 @@ package com.amalitechfileserver.fileserverbackend.service;
 import com.amalitechfileserver.fileserverbackend.dto.DownloadedFile;
 import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
+import com.amalitechfileserver.fileserverbackend.exception.BadInput;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
 import jakarta.mail.MessagingException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface FileServerService {
-    String uploadFile(MultipartFile file, String title, String description) throws Exception;
+    String uploadFile(MultipartFile file, String title, String description) throws MaxUploadSizeExceededException, IOException, BadInput;
 
     String shareFile(FileShareDto fileShareDto) throws MessagingException, FileNotFound;
 

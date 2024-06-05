@@ -1,6 +1,7 @@
 package com.amalitechfileserver.fileserverbackend.controller;
 
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
+import com.amalitechfileserver.fileserverbackend.exception.BadInput;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
 import com.amalitechfileserver.fileserverbackend.service.FileServerService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -26,7 +28,7 @@ public class AdminController {
             @RequestParam(name = "file") MultipartFile file,
             @RequestParam(name = "title") String title,
             @RequestParam(name = "description") String description
-    ) throws Exception {
+    ) throws IOException, BadInput {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(fileServerService.uploadFile(file, title, description));
     }

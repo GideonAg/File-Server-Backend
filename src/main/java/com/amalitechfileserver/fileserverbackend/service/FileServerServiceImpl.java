@@ -4,6 +4,7 @@ import com.amalitechfileserver.fileserverbackend.auth.SendMails;
 import com.amalitechfileserver.fileserverbackend.dto.DownloadedFile;
 import com.amalitechfileserver.fileserverbackend.dto.FileShareDto;
 import com.amalitechfileserver.fileserverbackend.entity.FileEntity;
+import com.amalitechfileserver.fileserverbackend.exception.BadInput;
 import com.amalitechfileserver.fileserverbackend.exception.FileNotFound;
 import com.amalitechfileserver.fileserverbackend.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -21,12 +23,10 @@ public class FileServerServiceImpl implements FileServerService{
     private final SendMails sendMails;
 
     @Override
-    public String uploadFile(MultipartFile file, String title, String description) throws Exception {
-        if (file.getSize() > 20000000)
-            throw new MaxUploadSizeExceededException(20000000);
+    public String uploadFile(MultipartFile file, String title, String description) throws MaxUploadSizeExceededException, IOException, BadInput {
 
         if (file.isEmpty() || title.isBlank() || description.isBlank())
-            throw new Exception("File title and description are required");
+            throw new BadInput("File title and description are required");
 
         FileEntity fileEntity = FileEntity.builder()
                 .title(title)

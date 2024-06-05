@@ -35,7 +35,12 @@ public class Listeners {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<String> fileSizeExceeded(MaxUploadSizeExceededException exception) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("File size should be less than 20MB");
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("File size should be less than 25MB");
+    }
+
+    @ExceptionHandler(BadInput.class)
+    public ResponseEntity<String> badInput(BadInput exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -53,6 +58,6 @@ public class Listeners {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> genericException(Exception exception) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
     }
 }
