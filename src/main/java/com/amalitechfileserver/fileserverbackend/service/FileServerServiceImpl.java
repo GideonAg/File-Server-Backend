@@ -70,6 +70,12 @@ public class FileServerServiceImpl implements FileServerService{
     private static String getFilename(FileEntity fetchedFile) {
         String extension = fetchedFile.getFileType()
                 .substring(fetchedFile.getFileType().indexOf("/") + 1);
+
+        if (extension.equals("vnd.openxmlformats-officedocument.presentationml.presentation"))
+            return fetchedFile.getTitle() + ".ppt";
+        else if (extension.equals("msword"))
+            return fetchedFile.getTitle() + ".doc";
+
         return fetchedFile.getTitle() + "." + extension;
     }
 
