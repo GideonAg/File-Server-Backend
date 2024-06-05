@@ -1,21 +1,82 @@
 # FILE SERVER APPLICATION
 
-## [Backend hosted here on Azure]()
+    This is a web API designed to enable a client move her business
+    online to enhance the scalability of her business. This application
+    provides support user login, downloading, sharing of files easily.
 
-* [LOGIN](#login)
-* [REGISTER](#user-registration)
-* [EMAIL VERIFICATION](#email-verification)
-* [UPDATE PASSWORD](#update-password)
-* [FORGOT PASSWORD](#forgot-password)
+<!-- TOC -->
+* [FILE SERVER APPLICATION](#file-server-application)
+  * [LOGIN](#login)
+    * [Request Information](#request-information)
+    * [JSON Body](#json-body)
+    * [Error Responses](#error-responses)
+    * [Successful Response Example](#successful-response-example)
+  * [USER REGISTRATION](#user-registration)
+    * [Request Information](#request-information-1)
+    * [JSON Body](#json-body-1)
+    * [Error Responses](#error-responses-1)
+    * [Successful Response Example](#successful-response-example-1)
+  * [EMAIL VERIFICATION](#email-verification)
+    * [Request Information](#request-information-2)
+    * [Request Param](#request-param)
+    * [Successful Response Example](#successful-response-example-2)
+  * [UPDATE PASSWORD](#update-password)
+    * [Request Information](#request-information-3)
+    * [Header](#header)
+    * [Request Param](#request-param-1)
+    * [JSON Body](#json-body-2)
+    * [Error Responses](#error-responses-2)
+    * [Successful Response Example](#successful-response-example-3)
+  * [FORGOT PASSWORD](#forgot-password)
+    * [Request Information](#request-information-4)
+    * [JSON Body](#json-body-3)
+    * [Error Responses](#error-responses-3)
+    * [Successful Response Example](#successful-response-example-4)
 * [FILE CONTROLLER ENDPOINTS](#file-controller-endpoints)
-* [UPLOAD FILES](#upload-files)
-* [ADMIN GET ALL FILES](#admin-get-all-files)
-* [ADMIN SEARCH FOR FILES](#admin-search-for-files)
-* [ADMIN DELETE FILE](#admin-delete-file)
-* [USER GET ALL FILES](#user-get-all-files)
-* [USER SEARCH FOR FILE](#user-search-for-file)
-* [DOWNLOAD FILE](#download-file)
-* [SEND FILE TO AN EMAIL](#send-file-to-an-email)
+  * [UPLOAD FILES](#upload-files)
+    * [Request Information](#request-information-5)
+    * [Header](#header-1)
+    * [Form-data Body](#form-data-body)
+    * [Error Responses](#error-responses-4)
+    * [Successful Response Example](#successful-response-example-5)
+  * [ADMIN GET ALL FILES](#admin-get-all-files)
+    * [Request Information](#request-information-6)
+    * [Header](#header-2)
+    * [Error Responses](#error-responses-5)
+    * [Successful Response Example](#successful-response-example-6)
+  * [ADMIN SEARCH FOR FILES](#admin-search-for-files)
+    * [Request Information](#request-information-7)
+    * [Header](#header-3)
+    * [Error Responses](#error-responses-6)
+    * [Successful Response Example](#successful-response-example-7)
+  * [ADMIN DELETE FILE](#admin-delete-file)
+    * [Request Information](#request-information-8)
+    * [Header](#header-4)
+    * [Error Responses](#error-responses-7)
+    * [Successful Response Example](#successful-response-example-8)
+  * [USER GET ALL FILES](#user-get-all-files)
+    * [Request Information](#request-information-9)
+    * [Header](#header-5)
+    * [Error Responses](#error-responses-8)
+    * [Successful Response Example](#successful-response-example-9)
+  * [USER SEARCH FOR FILE](#user-search-for-file)
+    * [Request Information](#request-information-10)
+    * [Header](#header-6)
+    * [Error Responses](#error-responses-9)
+    * [Successful Response Example](#successful-response-example-10)
+  * [DOWNLOAD FILE](#download-file)
+    * [Request Information](#request-information-11)
+    * [Header](#header-7)
+    * [Path Variable](#path-variable)
+    * [Error Responses](#error-responses-10)
+    * [Successful Response Example](#successful-response-example-11)
+  * [SEND FILE TO AN EMAIL](#send-file-to-an-email)
+    * [Request Information](#request-information-12)
+    * [Header](#header-8)
+    * [JSON Body](#json-body-4)
+    * [Error Responses](#error-responses-11)
+    * [Successful Response Example](#successful-response-example-12)
+<!-- TOC -->
 
 
 ## LOGIN
@@ -85,9 +146,9 @@
 
 ### Request Information
 
-| Method | URL                                                                |
-|--------|--------------------------------------------------------------------|
-| GET    | https://file-server-backend-1n25.onrender.com/auth/register/verify |
+| Method | URL                                                                                 |
+|--------|-------------------------------------------------------------------------------------|
+| GET    | https://file-server-backend-1n25.onrender.com/auth/register/verify?token=someToken  |
 
 ### Request Param
 
@@ -115,8 +176,7 @@
 
 | Type         | Property Name    |
 |--------------|------------------|
-| Allow        | POST, OPTION     |
-| Content-Type | Application/Json |
+| Content-Type | application/json |
 
 ### Request Param
 | Property Name | type   | required |
@@ -184,13 +244,12 @@
 
 ### Header
 
-| Type         | Property Name        |
-|--------------|----------------------|
-| Allow        | POST, OPTION         |
-| Content-Type | Application/Json     |
-| token        | Authentication Token |
+| Type         | Property Name       |
+|--------------|---------------------|
+| Content-Type | multipart/form-data |
+| token        | jwt                 |
 
-### JSON Body
+### Form-data Body
 
 | Property Name | type   | required |
 |---------------|--------|----------|
@@ -200,10 +259,10 @@
 
 ### Error Responses
 
-| Code | Message                                             |
-|------|-----------------------------------------------------| 
-| 403  | "You do not have permission to perform this action" |
-| 400  | "Title, description and file are required"          |
+| Code | Message                                   |
+|------|-------------------------------------------| 
+| 403  | "Forbidden"                               |
+| 400  | "File title and description are required" |
 
 ### Successful Response Example
 
@@ -221,11 +280,10 @@
 
 ### Header
 
-| Type         | Property Name        |
-|--------------|----------------------|
-| Allow        | POST, OPTION         |
-| Content-Type | Application/Json     |
-| token        | Authentication Token |
+| Type         | Property Name    |
+|--------------|------------------|
+| Content-Type | application/json |
+| token        | jwt              |
 
 
 ### Error Responses
@@ -269,11 +327,10 @@
 
 ### Header
 
-| Type         | Property Name        |
-|--------------|----------------------|
-| Allow        | POST, OPTION         |
-| Content-Type | Application/Json     |
-| token        | Authentication Token |
+| Type         | Property Name    |
+|--------------|------------------|
+| Content-Type | application/json |
+| token        | jwt              |
 
 
 ### Error Responses
@@ -307,11 +364,10 @@
 
 ### Header
 
-| Type         | Property Name        |
-|--------------|----------------------|
-| Allow        | POST, OPTION         |
-| Content-Type | Application/Json     |
-| token        | Authentication Token |
+| Type         | Property Name    |
+|--------------|------------------|
+| Content-Type | application/json |
+| token        | jwt              |
 
 
 ### Error Responses
@@ -338,8 +394,7 @@
 
 | Type         | Property Name        |
 |--------------|----------------------|
-| Allow        | POST, OPTION         |
-| Content-Type | Application/Json     |
+| Content-Type | application/json     |
 | token        | Authentication Token |
 
 
@@ -377,8 +432,7 @@
 
 | Type         | Property Name        |
 |--------------|----------------------|
-| Allow        | POST, OPTION         |
-| Content-Type | Application/Json     |
+| Content-Type | application/json     |
 | token        | Authentication Token |
 
 
@@ -415,13 +469,11 @@
 
 ### Header
 
-| Type         | Property Name        |
-|--------------|----------------------|
-| Allow        | POST, OPTION         |
-| Content-Type | Application/Json     |
-| token        | Authentication Token |
+| Type         | Property Name |
+|--------------|---------------|
+| token        | jwt           |
 
-### JSON Body
+### Path Variable
 
 | Property Name | type   | required |
 |---------------|--------|----------|
@@ -448,11 +500,10 @@ returns a byte array of the file
 
 ### Header
 
-| Type         | Property Name        |
-|--------------|----------------------|
-| Allow        | POST, OPTION         |
-| Content-Type | Application/Json     |
-| token        | Authentication Token |
+| Type         | Property Name    |
+|--------------|------------------|
+| Content-Type | application/json |
+| token        | jwt              |
 
 ### JSON Body
 
@@ -463,11 +514,12 @@ returns a byte array of the file
 
 ### Error Responses
 
-| Code | Message                                   |
-|------|-------------------------------------------|
-| 400  | "Receiver email and file id are required" |
-| 400  | "Invalid email address format "           |
-| 404  | "File not found"                          |
+| Code | Message                         |
+|------|---------------------------------|
+| 400  | "File ID is required"           |
+| 400  | "Please enter a valid email"    |
+| 400  | "Email cannot be null or empty" |
+| 404  | "File not found"                |
 
 ### Successful Response Example
 ```
