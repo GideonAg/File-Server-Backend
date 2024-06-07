@@ -72,11 +72,10 @@ public class AuthServiceImpl implements AuthService {
             UserEntity user = verifyToken.get().getUser();
             user.setEnabled(true);
             userRepository.save(user);
-            userTokenRepository.delete(verifyToken.get());
             return "Account verification successful";
         }
 
-        return "Account already verified";
+        return "Account verification failed";
     }
 
     @Override
