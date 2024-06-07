@@ -11,4 +11,5 @@ public class AuthResponse {
     private String userEmail;
     private String userId;
     private String jwt;
+    private boolean isAdmin;
 }

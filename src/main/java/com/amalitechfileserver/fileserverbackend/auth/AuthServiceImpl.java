@@ -61,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
                 .userEmail(user.getEmail())
                 .userId(user.getId())
                 .jwt(jwt)
+                .isAdmin(user.getRole().toString().equals("ADMIN"))
                 .build();
     }
 
