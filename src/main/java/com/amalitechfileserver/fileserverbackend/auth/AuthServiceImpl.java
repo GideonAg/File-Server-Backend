@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -30,6 +31,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserTokenRepository userTokenRepository;
 
     @Override
+    @Transactional
     public String register(AuthDto registerDto) throws UserAlreadyRegisteredException {
 
         Optional<UserEntity> fetchedUser = userRepository.findByEmail(registerDto.getEmail());
@@ -80,6 +82,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public String forgotPassword(ForgotPasswordDto forgotPasswordDto) throws UserNotFound {
 
         UserEntity user = userRepository.findByEmail(forgotPasswordDto.getEmail()).orElseThrow(
