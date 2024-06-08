@@ -48,7 +48,11 @@ public class SendMails {
                 %s
                 """;
         String url = fileServerBaseUrl + "/auth/register/verify?token=" + token;
-        sendMail(user.getEmail(), mailSubject, mailBody, url);
+        try {
+            sendMail(user.getEmail(), mailSubject, mailBody, url);
+        } catch (Exception exception) {
+            throw new RuntimeException("Failed to send verification email, try again later");
+        }
     }
 
     @Async
@@ -62,7 +66,11 @@ public class SendMails {
                 
                 http://localhost:5173/update-password/%s
                 """;
-        sendMail(user.getEmail(), mailSubject, mailBody, token);
+        try {
+            sendMail(user.getEmail(), mailSubject, mailBody, token);
+        } catch (Exception exception) {
+            throw new RuntimeException("Failed to send password reset email, try again later");
+        }
     }
 
     private String getUserToken(UserEntity user) {
