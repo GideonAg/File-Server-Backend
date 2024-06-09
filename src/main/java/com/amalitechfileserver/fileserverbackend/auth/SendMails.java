@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+import static com.amalitechfileserver.fileserverbackend.service.FileServerServiceImpl.getFilename;
+
 @Component
 @RequiredArgsConstructor
 public class SendMails {
@@ -47,7 +49,9 @@ public class SendMails {
                 
                 %s
                 """;
+
         String url = fileServerBaseUrl + "/auth/register/verify?token=" + token;
+
         try {
             sendMail(user.getEmail(), mailSubject, mailBody, url);
         } catch (Exception exception) {
@@ -66,6 +70,7 @@ public class SendMails {
                 
                 http://localhost:5173/update-password/%s
                 """;
+
         try {
             sendMail(user.getEmail(), mailSubject, mailBody, token);
         } catch (Exception exception) {
@@ -79,17 +84,20 @@ public class SendMails {
                 .token(token)
                 .user(user)
                 .build();
+
         userTokenRepository.save(userToken);
         return token;
     }
 
     private void sendMail(String userEmail, String mailSubject, String mailBody, String url) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
+
         mailMessage.setFrom(fileServerEmail);
         mailMessage.setTo(userEmail);
         mailMessage.setSubject(mailSubject);
         String text = String.format(mailBody, url);
         mailMessage.setText(text);
+
         javaMailSender.send(mailMessage);
     }
 
@@ -113,16 +121,16 @@ public class SendMails {
     }
 
     private MimeBodyPart getMimeBodyPart(FileShareDto fileShareDto, FileEntity fetchedFile, MimeMessage message) throws MessagingException {
+
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true);
         mimeMessageHelper.setTo(fileShareDto.getReceiverEmail());
         mimeMessageHelper.setFrom(fileServerEmail);
         mimeMessageHelper.setSubject("File sent to you from File Server");
 
-        String fileType = fetchedFile.getFileType();
-        String extension = fileType.substring(fileType.indexOf('/') + 1);
-        String filename = fetchedFile.getTitle() + "." + extension;
+        String filename = getFilename(fetchedFile);
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
         ByteArrayDataSource dataSource = new ByteArrayDataSource(fetchedFile.getFile(), fetchedFile.getFileType());
+
         mimeBodyPart.setDataHandler(new DataHandler(dataSource));
         mimeBodyPart.setFileName(filename);
         return mimeBodyPart;

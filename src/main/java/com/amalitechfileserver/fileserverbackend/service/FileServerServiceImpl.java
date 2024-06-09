@@ -67,7 +67,7 @@ public class FileServerServiceImpl implements FileServerService{
         return downloadedFile;
     }
 
-    private static String getFilename(FileEntity fetchedFile) {
+    public static String getFilename(FileEntity fetchedFile) {
         String extension = fetchedFile.getFileType()
                 .substring(fetchedFile.getFileType().indexOf("/") + 1);
 
