@@ -6,6 +6,7 @@ import com.amalitechfileserver.fileserverbackend.auth.Role;
 import com.amalitechfileserver.fileserverbackend.auth.SendMails;
 import com.amalitechfileserver.fileserverbackend.config.JwtService;
 import com.amalitechfileserver.fileserverbackend.dto.AuthDto;
+import com.amalitechfileserver.fileserverbackend.dto.ChangePasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.ForgotPasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.PasswordUpdateDto;
 import com.amalitechfileserver.fileserverbackend.entity.UserEntity;
@@ -29,6 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(value = MockitoExtension.class)
@@ -102,7 +104,7 @@ public class AuthServiceTest {
     @Test
     public void AuthService_Login_ReturnObject() {
 
-        Authentication authentication = Mockito.mock(Authentication.class);
+        Authentication authentication = mock(Authentication.class);
 
         when(userRepository
                 .findByEmail(authDto.getEmail())
@@ -159,6 +161,29 @@ public class AuthServiceTest {
         ).thenReturn(Optional.ofNullable(userToken));
 
         String response = authService.updatePassword(token, passwordUpdateDto);
+
+        Assertions.assertThat(response).isEqualTo("Password updated successfully");
+    }
+
+    @Test
+    public void AuthService_ChangePassword_ReturnString() throws UserNotFound {
+
+        ChangePasswordDto changePasswordDto = ChangePasswordDto
+                                    .builder()
+                                    .currentPassword("password")
+                                    .newPassword("passwords")
+                                    .jwt("token")
+                                    .build();
+
+        when(userTokenRepository
+                .findByToken(changePasswordDto.getJwt())
+        ).thenReturn(Optional.ofNullable(userToken));
+
+        when(passwordEncoder
+                .matches(changePasswordDto.getCurrentPassword(), user.getPassword())
+        ).thenReturn(true);
+
+        String response = authService.changePassword(changePasswordDto);
 
         Assertions.assertThat(response).isEqualTo("Password updated successfully");
     }

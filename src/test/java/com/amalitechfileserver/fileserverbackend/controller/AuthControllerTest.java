@@ -4,6 +4,7 @@ import com.amalitechfileserver.fileserverbackend.auth.AuthController;
 import com.amalitechfileserver.fileserverbackend.auth.AuthService;
 import com.amalitechfileserver.fileserverbackend.config.JwtService;
 import com.amalitechfileserver.fileserverbackend.dto.AuthDto;
+import com.amalitechfileserver.fileserverbackend.dto.ChangePasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.ForgotPasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.PasswordUpdateDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -128,6 +129,26 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                         .param("token", token)
                 .content(objectMapper.writeValueAsString(passwordUpdateDto)));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void AuthController_ChangePassword_ReturnString() throws Exception {
+        ChangePasswordDto changePasswordDto = ChangePasswordDto
+                .builder()
+                .currentPassword("password")
+                .newPassword("passwords")
+                .jwt("token")
+                .build();
+
+        given(authService
+                .changePassword(changePasswordDto)
+        ).willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+
+        ResultActions response = mockMvc.perform(post("/auth/change-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(changePasswordDto)));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }
