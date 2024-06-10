@@ -1,6 +1,7 @@
 package com.amalitechfileserver.fileserverbackend.auth;
 
 import com.amalitechfileserver.fileserverbackend.dto.AuthDto;
+import com.amalitechfileserver.fileserverbackend.dto.ChangePasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.ForgotPasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.PasswordUpdateDto;
 import com.amalitechfileserver.fileserverbackend.exception.UserAlreadyRegisteredException;
@@ -17,4 +18,6 @@ public interface AuthService {
     String forgotPassword(ForgotPasswordDto forgotPasswordDto) throws UserNotFound;
 
     String updatePassword(String token, PasswordUpdateDto updatePasswordDto) throws UserNotFound;
+
+    String changePassword(ChangePasswordDto changePasswordDto) throws UserNotFound;
 }

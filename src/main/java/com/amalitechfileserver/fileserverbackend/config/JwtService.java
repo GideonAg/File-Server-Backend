@@ -1,6 +1,7 @@
 package com.amalitechfileserver.fileserverbackend.config;
 
 import com.amalitechfileserver.fileserverbackend.entity.UserEntity;
+import com.amalitechfileserver.fileserverbackend.repository.UserTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,6 +24,7 @@ public class JwtService {
     private String key;
 
     private final SecretKey SECRET_KEY;
+    private final UserTokenRepository userTokenRepository;
 
     public String getUserEmail(String jwt) {
         return extractClaims(jwt, Claims::getSubject);
@@ -45,8 +47,11 @@ public class JwtService {
         String userEmail = userDetails.getUsername();
         String retrievedEmail = extractClaims(jwt, Claims::getSubject);
         Date date = extractClaims(jwt, Claims::getExpiration);
+        boolean tokenPresent = userTokenRepository.findByToken(jwt).isPresent();
 
-        return date.after(new Date()) && userEmail.equals(retrievedEmail);
+        return date.after(new Date())
+               && userEmail.equals(retrievedEmail)
+                && tokenPresent;
     }
 
     public String generateJwt(UserEntity user) {

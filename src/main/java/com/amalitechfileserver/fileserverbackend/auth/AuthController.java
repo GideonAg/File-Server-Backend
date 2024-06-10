@@ -1,6 +1,7 @@
 package com.amalitechfileserver.fileserverbackend.auth;
 
 import com.amalitechfileserver.fileserverbackend.dto.AuthDto;
+import com.amalitechfileserver.fileserverbackend.dto.ChangePasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.ForgotPasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.PasswordUpdateDto;
 import com.amalitechfileserver.fileserverbackend.exception.UserAlreadyRegisteredException;
@@ -44,9 +45,16 @@ public class AuthController {
     }
 
     @PostMapping("/update-password")
-    public ResponseEntity<String> updatePassword(
-            @RequestParam("token") String token, @RequestBody @Valid PasswordUpdateDto updatePasswordDto) throws UserNotFound {
+    public ResponseEntity<String> updatePassword(@RequestParam("token") String token,
+                                                 @RequestBody @Valid PasswordUpdateDto updatePasswordDto)
+            throws UserNotFound {
         return ResponseEntity.ok(authService.updatePassword(token, updatePasswordDto));
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto)
+            throws UserNotFound {
+        return ResponseEntity.ok(authService.changePassword(changePasswordDto));
     }
 
 }

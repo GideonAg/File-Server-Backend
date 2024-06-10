@@ -2,10 +2,12 @@ package com.amalitechfileserver.fileserverbackend.auth;
 
 import com.amalitechfileserver.fileserverbackend.config.JwtService;
 import com.amalitechfileserver.fileserverbackend.dto.AuthDto;
+import com.amalitechfileserver.fileserverbackend.dto.ChangePasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.ForgotPasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.PasswordUpdateDto;
 import com.amalitechfileserver.fileserverbackend.entity.UserEntity;
 import com.amalitechfileserver.fileserverbackend.entity.UserToken;
+import com.amalitechfileserver.fileserverbackend.exception.InvalidCredentials;
 import com.amalitechfileserver.fileserverbackend.exception.UserAlreadyRegisteredException;
 import com.amalitechfileserver.fileserverbackend.exception.UserNotFound;
 import com.amalitechfileserver.fileserverbackend.repository.UserRepository;
@@ -58,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
         UserEntity user = userRepository.findByEmail(loginDto.getEmail()).get();
         String jwt = jwtService.generateJwt(user);
+        saveUserWithToken(jwt, user);
 
         return AuthResponse.builder()
                 .userEmail(user.getEmail())
@@ -65,6 +68,14 @@ public class AuthServiceImpl implements AuthService {
                 .jwt(jwt)
                 .isAdmin(user.getRole().toString().equals("ADMIN"))
                 .build();
+    }
+
+    private void saveUserWithToken(String jwt, UserEntity user) {
+        UserToken userToken = UserToken.builder()
+                                .token(jwt)
+                                .user(user)
+                                .build();
+        userTokenRepository.save(userToken);
     }
 
     @Override
@@ -105,6 +116,26 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
         userTokenRepository.delete(userToken);
         return "Password updated successfully";
+    }
+
+    @Override
+    public String changePassword(ChangePasswordDto changePasswordDto) throws UserNotFound {
+
+        UserToken userToken = userTokenRepository
+                .findByToken(changePasswordDto.getJwt())
+                .orElseThrow(() -> new UserNotFound("User not found"));
+
+        UserEntity user = userToken.getUser();
+
+        if (passwordEncoder.matches(changePasswordDto.getCurrentPassword(),
+                user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+
+            userRepository.save(user);
+            return "Password updated successfully";
+        }
+
+        return "Incorrect current password";
     }
 
 }
