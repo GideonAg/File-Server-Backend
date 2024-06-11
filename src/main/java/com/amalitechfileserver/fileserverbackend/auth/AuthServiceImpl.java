@@ -7,7 +7,6 @@ import com.amalitechfileserver.fileserverbackend.dto.ForgotPasswordDto;
 import com.amalitechfileserver.fileserverbackend.dto.PasswordUpdateDto;
 import com.amalitechfileserver.fileserverbackend.entity.UserEntity;
 import com.amalitechfileserver.fileserverbackend.entity.UserToken;
-import com.amalitechfileserver.fileserverbackend.exception.InvalidCredentials;
 import com.amalitechfileserver.fileserverbackend.exception.UserAlreadyRegisteredException;
 import com.amalitechfileserver.fileserverbackend.exception.UserNotFound;
 import com.amalitechfileserver.fileserverbackend.repository.UserRepository;

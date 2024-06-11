@@ -13,6 +13,8 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import jakarta.mail.util.ByteArrayDataSource;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -38,6 +40,8 @@ public class SendMails {
     private final UserTokenRepository userTokenRepository;
     private final JavaMailSender javaMailSender;
 
+    private static final Logger logger = LoggerFactory.getLogger(SendMails.class);
+
     @Async
     public void sendVerificationEmail(UserEntity user) {
         String token = getUserToken(user);
@@ -55,6 +59,7 @@ public class SendMails {
         try {
             sendMail(user.getEmail(), mailSubject, mailBody, url);
         } catch (Exception exception) {
+            logger.error("Error processing request at /auth/login ", exception);
             throw new RuntimeException("Failed to send verification email, try again later");
         }
     }
@@ -74,6 +79,7 @@ public class SendMails {
         try {
             sendMail(user.getEmail(), mailSubject, mailBody, token);
         } catch (Exception exception) {
+            logger.error("Error processing request at /auth/forgot-password ", exception);
             throw new RuntimeException("Failed to send password reset email, try again later");
         }
     }
@@ -116,6 +122,7 @@ public class SendMails {
             fetchedFile.setNumberOfShares(fetchedFile.getNumberOfShares() + 1);
             fileRepository.save(fetchedFile);
         } catch(Exception e) {
+            logger.error("Error processing request at /file/share ", e);
             throw new RuntimeException("Failed to send file, try again later");
         }
     }
