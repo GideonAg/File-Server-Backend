@@ -4,8 +4,14 @@
     online to enhance the scalability of her business. This application
     provides support user login, downloading, sharing of files easily.
 
+## Logging
+    Added logging functionality to the implementation of register, forgot password
+    and share file endpoints, to perform some logging into a file if a
+    request is to fail during it's execution.
+
 <!-- TOC -->
 * [FILE SERVER APPLICATION](#file-server-application)
+  * [Logging](#logging)
   * [LOGIN](#login)
     * [Request Information](#request-information)
     * [JSON Body](#json-body)
@@ -32,50 +38,55 @@
     * [JSON Body](#json-body-3)
     * [Error Responses](#error-responses-3)
     * [Successful Response Example](#successful-response-example-4)
-* [FILE CONTROLLER ENDPOINTS](#file-controller-endpoints)
-  * [UPLOAD FILES](#upload-files)
+  * [CHANGE PASSWORD](#change-password)
     * [Request Information](#request-information-5)
-    * [Header](#header-1)
-    * [Form-data Body](#form-data-body)
+    * [JSON Body](#json-body-4)
     * [Error Responses](#error-responses-4)
     * [Successful Response Example](#successful-response-example-5)
-  * [ADMIN GET ALL FILES](#admin-get-all-files)
+* [FILE CONTROLLER ENDPOINTS](#file-controller-endpoints)
+  * [UPLOAD FILES](#upload-files)
     * [Request Information](#request-information-6)
-    * [Header](#header-2)
+    * [Header](#header-1)
+    * [Form-data Body](#form-data-body)
     * [Error Responses](#error-responses-5)
     * [Successful Response Example](#successful-response-example-6)
-  * [ADMIN SEARCH FOR FILES](#admin-search-for-files)
+  * [ADMIN GET ALL FILES](#admin-get-all-files)
     * [Request Information](#request-information-7)
-    * [Header](#header-3)
+    * [Header](#header-2)
     * [Error Responses](#error-responses-6)
     * [Successful Response Example](#successful-response-example-7)
-  * [ADMIN DELETE FILE](#admin-delete-file)
+  * [ADMIN SEARCH FOR FILES](#admin-search-for-files)
     * [Request Information](#request-information-8)
-    * [Header](#header-4)
+    * [Header](#header-3)
     * [Error Responses](#error-responses-7)
     * [Successful Response Example](#successful-response-example-8)
-  * [USER GET ALL FILES](#user-get-all-files)
+  * [ADMIN DELETE FILE](#admin-delete-file)
     * [Request Information](#request-information-9)
-    * [Header](#header-5)
+    * [Header](#header-4)
     * [Error Responses](#error-responses-8)
     * [Successful Response Example](#successful-response-example-9)
-  * [USER SEARCH FOR FILE](#user-search-for-file)
+  * [USER GET ALL FILES](#user-get-all-files)
     * [Request Information](#request-information-10)
-    * [Header](#header-6)
+    * [Header](#header-5)
     * [Error Responses](#error-responses-9)
     * [Successful Response Example](#successful-response-example-10)
-  * [DOWNLOAD FILE](#download-file)
+  * [USER SEARCH FOR FILE](#user-search-for-file)
     * [Request Information](#request-information-11)
-    * [Header](#header-7)
-    * [Path Variable](#path-variable)
+    * [Header](#header-6)
     * [Error Responses](#error-responses-10)
     * [Successful Response Example](#successful-response-example-11)
-  * [SEND FILE TO AN EMAIL](#send-file-to-an-email)
+  * [DOWNLOAD FILE](#download-file)
     * [Request Information](#request-information-12)
-    * [Header](#header-8)
-    * [JSON Body](#json-body-4)
+    * [Header](#header-7)
+    * [Path Variable](#path-variable)
     * [Error Responses](#error-responses-11)
     * [Successful Response Example](#successful-response-example-12)
+  * [SEND FILE TO AN EMAIL](#send-file-to-an-email)
+    * [Request Information](#request-information-13)
+    * [Header](#header-8)
+    * [JSON Body](#json-body-5)
+    * [Error Responses](#error-responses-12)
+    * [Successful Response Example](#successful-response-example-13)
 <!-- TOC -->
 
 
@@ -231,6 +242,34 @@
     Password reset link sent to email
 ```
 
+## CHANGE PASSWORD
+
+### Request Information
+
+| Method | URL                                                                |
+|--------|--------------------------------------------------------------------|
+| POST   | https://file-server-backend-1n25.onrender.com/auth/change-password |
+
+### JSON Body
+
+| Property Name   | type   | required |
+|-----------------|--------|----------|
+| currentPassword | String | true     |
+| newPassword     | String | true     |
+| jwt             | String | true     |
+
+### Error Responses
+
+| Code | Message                                                               |
+|------|-----------------------------------------------------------------------|
+| 400  | "Password should contain numbers and digits only. 3 to 20 characters" |
+| 400  | "Current password is required"                                        |
+| 200  | "Incorrect current password"                                          |
+
+### Successful Response Example
+```
+  Password updated successfully
+```
 
 # FILE CONTROLLER ENDPOINTS
 
