@@ -42,12 +42,14 @@ public class Logout implements LogoutHandler {
             } catch (IOException e) {
                 throw new RuntimeException("Failed to logout");
             }
-        } else {
-            try {
-                new ObjectMapper().writeValue(response.getOutputStream(), "Failed to logout");
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to logout");
-            }
+
+            return;
+        }
+
+        try {
+            new ObjectMapper().writeValue(response.getOutputStream(), "Failed to logout");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
