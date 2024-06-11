@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/file")
 @RequiredArgsConstructor
-@CrossOrigin(value = "http://localhost:5173")
 public class FileServerController {
 
     private final FileServerService fileServerService;

@@ -18,7 +18,6 @@ import java.util.List;
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 @RequestMapping("/file")
-@CrossOrigin(value = "http://localhost:5173")
 public class AdminController {
 
     private final FileServerService fileServerService;
