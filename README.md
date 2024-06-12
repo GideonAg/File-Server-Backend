@@ -9,6 +9,9 @@
     and share file endpoints, to perform some logging into a file if a
     request is to fail during it's execution.
 
+* email: fileserverapplication@gmail.com
+* password: 111
+
 <!-- TOC -->
 * [FILE SERVER APPLICATION](#file-server-application)
   * [Logging](#logging)
