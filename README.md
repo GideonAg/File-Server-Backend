@@ -10,7 +10,7 @@
     request is to fail during it's execution.
 
 * email: fileserverapplication@gmail.com
-* password: 111
+* password: 123
 
 <!-- TOC -->
 * [FILE SERVER APPLICATION](#file-server-application)
