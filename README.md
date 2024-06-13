@@ -11,6 +11,7 @@
 
 * email: fileserverapplication@gmail.com
 * password: 123
+* [Deployed link of frontend](https://file-server-frontend.vercel.app/)
 
 <!-- TOC -->
 * [FILE SERVER APPLICATION](#file-server-application)
