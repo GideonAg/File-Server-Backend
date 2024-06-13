@@ -73,7 +73,7 @@ public class SendMails {
                 
                 Kindly tap on the link below to reset your account password
                 
-                http://localhost:5173/update-password/%s
+                https://file-server-frontend.vercel.app/update-password/%s
                 """;
 
         try {
