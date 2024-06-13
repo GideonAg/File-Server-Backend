@@ -1,4 +1,4 @@
-# FILE SERVER APPLICATION
+![ER diagram of database](https://github.com/GideonAg/File-Server-Backend/assets/99260218/0faa88f4-06ed-4b78-b7c5-dcc2a1ca4fcb)# FILE SERVER APPLICATION
 
     This is a web API designed to enable a client move her business
     online to enhance the scalability of her business. This application
@@ -9,9 +9,12 @@
     and share file endpoints, to perform some logging into a file if a
     request is to fail during it's execution.
 
+# Deployed link and admin credentials
 * email: fileserverapplication@gmail.com
 * password: 123
 * [Deployed link of frontend](https://file-server-frontend.vercel.app/)
+
+# ER diagram of database design
 
 <!-- TOC -->
 * [FILE SERVER APPLICATION](#file-server-application)
