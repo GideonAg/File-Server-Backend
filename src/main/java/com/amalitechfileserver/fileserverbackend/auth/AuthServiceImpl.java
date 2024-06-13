@@ -96,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
     public String forgotPassword(ForgotPasswordDto forgotPasswordDto) throws UserNotFound {
 
         UserEntity user = userRepository.findByEmail(forgotPasswordDto.getEmail()).orElseThrow(
-                () -> new UserNotFound("User not found")
+                () -> new UserNotFound("Incorrect email address")
         );
 
         sendMails.sendPasswordResetEmail(user);
