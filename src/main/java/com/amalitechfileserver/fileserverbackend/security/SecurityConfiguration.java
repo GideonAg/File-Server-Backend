@@ -33,7 +33,7 @@ public class SecurityConfiguration {
         return http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("https://file-server-frontend-0ixj.onrender.com"));
+                    config.setAllowedOrigins(List.of("https://file-server-frontend.vercel.app"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     config.setAllowedHeaders(List.of("Authorization", "Content", "Content-Type"));
                     config.setExposedHeaders(List.of(HttpHeaders.CONTENT_DISPOSITION));
