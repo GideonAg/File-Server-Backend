@@ -3,6 +3,7 @@ package com.amalitechfileserver.fileserverbackend.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,6 +36,7 @@ public class SecurityConfiguration {
                     config.setAllowedOrigins(List.of("https://file-server-frontend-0ixj.onrender.com"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     config.setAllowedHeaders(List.of("Authorization", "Content", "Content-Type"));
+                    config.setExposedHeaders(List.of(HttpHeaders.CONTENT_DISPOSITION));
                     config.setAllowCredentials(true);
 
                     return config;
